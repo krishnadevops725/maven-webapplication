@@ -8,7 +8,7 @@
     <groupId>com.kk</groupId>
     <artifactId>maven-web-application-Akshara</artifactId>
     <packaging>war</packaging>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1-Release</version>
 
     <name>maven-web-application</name>
     <description>Maven Web Project for Java Project</description>
