@@ -92,13 +92,13 @@
         <repository>
             <id>nexus</id>
             <name>Akshara Releases Nexus Repository</name>
-            <url>http://100.31.207.74:8081/repository/akshara-Release/</url>
+            <url>http://54.165.81.41:8081/repository/Restarent-Release/</url>
         </repository>
 
         <snapshotRepository>
             <id>nexus</id>
             <name>Akshara Snapshot Nexus Repository</name>
-            <url>http://100.31.207.74:8081/repository/akshara-snapshot/</url>
+            <url>http://54.165.81.41:8081/repository/Restarent-snapshot/</url>
         </snapshotRepository>
 
     </distributionManagement>
