@@ -193,7 +193,7 @@
     <section class="contact" id="contact">
         <h2>Contact Us</h2>
         <p>📍 Hyderabad, India</p>
-        <p>📞 +91 98765 2522</p>
+        <p>📞 +91 98765 2533422</p>
         <p>✉️ tastybites@email.com</p>
     </section>
 
