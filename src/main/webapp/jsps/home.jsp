@@ -159,7 +159,7 @@
     <section class="about" id="about">
         <h2>About Us</h2>
         <p>
-            Welcome to Tasty Bites! We serve delicious meals made with fresh ingredients.
+            Welcome to Tasty Bites and restarent! We serve delicious meals made with fresh ingredients.
             Our goal is to give you a memorable dining experience.
         </p>
     </section>
