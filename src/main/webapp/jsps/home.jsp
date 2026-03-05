@@ -192,7 +192,7 @@
 
     <section class="contact" id="contact">
         <h2>Contact Us</h2>
-        <p>📍 Bangalore,Hyderabad India</p>
+        <p>📍 Bangalore,Hyderabad,Chennai India</p>
         <p>📞 +91 00000 00000dgdgd</p>
         <p>✉️ tastybites@email.com</p>
     </section>
