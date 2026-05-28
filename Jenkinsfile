@@ -38,7 +38,7 @@ node {
             sh """
                 curl -u krishna:krishna \
                 --upload-file target/maven-web-application.war \
-                "http://13.218.222.226:8080/manager/text/deploy?path=/maven-web-application&update=true"
+                "http://34.228.200.74:8080/manager/text/deploy?path=/maven-web-application&update=true"
             """
         }
 
