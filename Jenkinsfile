@@ -1,63 +1,85 @@
-node
-{
+node {
 
-   echo "git branch name: ${env.BRANCH_NAME}"
-   echo "build number is: ${env.BUILD_NUMBER}"
-   echo "node name is: ${env.NODE_NAME}"
+    echo "git branch name: ${env.BRANCH_NAME}"
+    echo "build number is: ${env.BUILD_NUMBER}"
+    echo "node name is: ${env.NODE_NAME}"
 
+    // Maven path
+    def mavenHome = tool name: "maven-3.9.6"
 
-   // /var/lib/jenkins/tools/hudson.tasks.Maven_MavenInstallation/maven-3.9.9/bin
-   def mavenHome=tool name: "maven-3.9.6"
-    try
-    {
+    try {
 
-  stage('git checkout')
-  {
-    notifyBuild('STARTED')
-    git branch: 'dev', url: 'https://github.com/krishnadevops725/maven-webapplication.git
-  } 
+        stage('git checkout') {
 
-    stage('COMPILE')
-  {
-    sh "${mavenHome}/bin/mvn clean compile"
-  }
+            notifyBuild('STARTED')
 
-  stage('Build')
-  {
-    sh "${mavenHome}/bin/mvn clean package"
-  }
+            git branch: 'dev',
+                url: 'https://github.com/krishnadevops725/maven-webapplication.git'
+        }
 
-    stage('SQ Report')
-  {
-    sh "${mavenHome}/bin/mvn sonar:sonar"
-  }
+        stage('COMPILE') {
+            sh "${mavenHome}/bin/mvn clean compile"
+        }
 
-      stage('Upload Artifact')
-  {
+        stage('Build') {
+            sh "${mavenHome}/bin/mvn clean package"
+        }
 
-    sh "${mavenHome}/bin/mvn clean deploy"
-  }
+        stage('SQ Report') {
+            sh "${mavenHome}/bin/mvn sonar:sonar"
+        }
 
-    stage('Deploy to Tomcat') 
-    {
-    
+        stage('Upload Artifact') {
+            sh "${mavenHome}/bin/mvn clean deploy"
+        }
 
-      sh """
-         curl -u krishna:krishna \
-         --upload-file target/maven-web-application.war \
-         "http://13.218.222.226:8080/manager/text/deploy?path=/maven-web-application&update=true"
-      """
-          
-   
+        stage('Deploy to Tomcat') {
+
+            sh """
+                curl -u krishna:krishna \
+                --upload-file target/maven-web-application.war \
+                "http://13.218.222.226:8080/manager/text/deploy?path=/maven-web-application&update=true"
+            """
+        }
+
+    } catch (e) {
+
+        currentBuild.result = "FAILED"
+        throw e
+
+    } finally {
+
+        // Success or failure, always send notifications
+        notifyBuild(currentBuild.result)
+    }
+}
+
+// Slack Notification Function
+def notifyBuild(String buildStatus = 'STARTED') {
+
+    // If build status is null, consider SUCCESS
+    buildStatus = buildStatus ?: 'SUCCESS'
+
+    // Default values
+    def colorCode = '#FF0000'
+    def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+    def summary = "${subject} (${env.BUILD_URL})"
+
+    // Set color based on build status
+    if (buildStatus == 'STARTED') {
+        colorCode = '#FFFF00'
+    } 
+    else if (buildStatus == 'SUCCESS') {
+        colorCode = '#00FF00'
+    } 
+    else {
+        colorCode = '#FF0000'
     }
 
-    }  //try ending
-
-    catch (e) {
-   
-       currentBuild.result = "FAILED"
-
-  } finally {
-    // Success or failure, always send notifications
-    notifyBuild(currentBuild.result)
-  }
+    // Send Slack notification
+    slackSend(
+        color: colorCode,
+        message: summary,
+        channel: '#sre-restarent'
+    )
+}
