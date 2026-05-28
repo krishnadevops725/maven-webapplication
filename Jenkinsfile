@@ -5,7 +5,7 @@ node {
     echo "node name is: ${env.NODE_NAME}"
 
     // Maven path
-    def mavenHome = tool name: "maven-3.9.9"
+    def mavenHome = tool name: "Maven-3.9.6"
 
     try {
 
