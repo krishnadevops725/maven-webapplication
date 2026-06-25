@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+
+    tools {
+        maven "Maven-3.9.6"
+    }
+
+    stages {
+        stage('git checkout') {
+            steps {
+                git branch: 'dev',
+                    url: 'https://github.com/krishnadevops725/maven-webapplication.git'
+            }
+        }
+
+        stage('build') {
+            steps {
+                sh "mvn clean package"
+            }
+        }
+
+        stage('SQ Report') {
+            steps {
+                sh "mvn sonar:sonar"
+            }
+        }
+
+        stage('Uploadinto Nexus') {
+            steps {
+                sh "mvn deploy"
+            }
+        }
+
+        stage('tomcat deploy') {
+            steps {
+                sh """
+                curl -u krishna:krishna \
+                --upload-file /var/lib/jenkins/workspace/Restrent-scripted/target/maven-web-application.war \
+                "http://13.51.56.101:8080/manager/text/deploy?path=/maven-web-application&update=true"
+                """
+            }
+        }
+    }
+}
