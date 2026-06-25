@@ -1,44 +1,36 @@
-pipeline {
-    agent any
+node {
+    def mavenHome = tool name: 'Maven-3.9.6'
 
-    tools {
-        maven "Maven-3.9.6"
+    stage('Git Checkout') {
+        git branch: 'dev',
+            url: 'https://github.com/krishnadevops725/maven-webapplication.git'
     }
 
-    stages {
-        stage('git checkout') {
-            steps {
-                git branch: 'dev',
-                    url: 'https://github.com/krishnadevops725/maven-webapplication.git'
-            }
-        }
+    stage('Compile') {
+        sh "${mavenHome}/bin/mvn clean compile"
+    }
 
-        stage('build') {
-            steps {
-                sh "mvn clean package"
-            }
-        }
+    stage('Build') {
+        sh "${mavenHome}/bin/mvn clean package"
+    }
 
-        stage('SQ Report') {
-            steps {
-                sh "mvn sonar:sonar"
-            }
-        }
+    stage('SQ Report') {
+        sh "${mavenHome}/bin/mvn sonar:sonar"
+    }
 
-        stage('Uploadinto Nexus') {
-            steps {
-                sh "mvn deploy"
-            }
-        }
+    stage('Upload Artifact') {
+        sh "${mavenHome}/bin/mvn clean deploy"
+    }
 
-        stage('tomcat deploy') {
-            steps {
-                sh """
-                curl -u krishna:krishna \
-                --upload-file /var/lib/jenkins/workspace/Restrent-scripted/target/maven-web-application.war \
-                "http://13.51.56.101:8080/manager/text/deploy?path=/maven-web-application&update=true"
-                """
-            }
-        }
+    stage('Check WAR') {
+        sh 'ls -l ${WORKSPACE}/target'
+    }
+
+    stage('Deploy to Tomcat') {
+        sh """
+            curl -u krishna:krishna \
+            --upload-file /var/lib/jenkins/workspace/Restrent-scripted/target/maven-web-application.war  \
+            "http://13.51.56.101:8080/manager/text/deploy?path=/maven-web-application&update=true"
+        """
     }
 }
