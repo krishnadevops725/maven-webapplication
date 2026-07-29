@@ -35,7 +35,7 @@ pipeline {
             steps {
                 sh """
                 curl -u krishna:krishna \
-                --upload-file /var/lib/jenkins/workspace/Declarativeway/target/maven-web-application.war \
+                --upload-file /var/lib/jenkins/workspace/Restarent-declarative/target/maven-web-application.war \
                 "http://16.170.171.188:8080/manager/text/deploy?path=/maven-web-application&update=true"
                 """
             }
